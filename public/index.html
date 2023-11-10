@@ -59,9 +59,12 @@
   <div id="languages"></div>
 
   <script>
+
+      const backendApiUrl = '<%= backendApiUrl %>';
     // Function to fetch data from the original API and update the page
     function fetchDataAndDisplay() {
-      fetch('https://api-cloudacademy.apps.cluster-x9mgm.sandbox69.opentlc.com/languages')
+     // fetch('https://api-cloudacademy.apps.cluster-x9mgm.sandbox69.opentlc.com/languages')
+       fetch(`https://${backendApiUrl}/languages`)
         .then(response => response.json())
         .then(data => displayLanguages(data));
     }
@@ -102,7 +105,7 @@
       // For simplicity, we're just incrementing the vote count locally
 
       // Make a GET request to the backend API to record the vote
-      fetch(`https://api-cloudacademy.apps.cluster-x9mgm.sandbox69.opentlc.com/languages/${language.toLowerCase()}/vote`)
+      fetch(`https://${backendApiUrl}/languages/${language.toLowerCase()}/vote`)
       .then(response => {
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
