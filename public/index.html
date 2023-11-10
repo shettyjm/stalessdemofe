@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Programming Language Voting App</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha384-lvf4y+ZAsKl1H7gP/RVli1oAwiU5bXWdWwOPwzB93M3g7L4Vg1pNJnCr9WM+k1K1" crossorigin="anonymous">
+  <style>
+    body {
+      font-family: 'Roboto', Arial, sans-serif;
+      text-align: center;
+      margin: 20px;
+    }
+
+    #languages {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+
+    .language-container {
+      width: 30%;
+      margin: 10px;
+      padding: 15px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-sizing: border-box;
+      text-align: left;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .language-container:hover {
+      transform: scale(1.05);
+    }
+
+    button {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      cursor: pointer;
+      background-color: #3498db;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      font-weight: bold;
+      transition: background-color 0.3s ease-in-out;
+    }
+
+    button:hover {
+      background-color: #2980b9;
+    }
+  </style>
+</head>
+<body>
+  <h1>Programming Language Voting App</h1>
+
+  <div id="languages"></div>
+
+  <script>
+    // Function to fetch data from the original API and update the page
+    function fetchDataAndDisplay() {
+      fetch('http://api-cloudacademy.apps.cluster-x9mgm.sandbox69.opentlc.com//languages')
+        .then(response => response.json())
+        .then(data => displayLanguages(data));
+    }
+
+    // Fetch data on page load
+    fetchDataAndDisplay();
+
+    // Display languages and voting buttons
+    function displayLanguages(languages) {
+      const languagesDiv = document.getElementById('languages');
+      // Clear existing content
+      languagesDiv.innerHTML = '';
+
+      for (const language in languages) {
+        const languageData = languages[language];
+        
+        const languageContainer = document.createElement('div');
+        languageContainer.classList.add('language-container');
+        languageContainer.innerHTML = `
+          <h2>${language}</h2>
+          <p>Use Case: ${languageData.usecase}</p>
+          <p>Rank: ${languageData.rank}</p>
+          <p>Compiled: ${languageData.compiled ? 'Yes' : 'No'}</p>
+          <p>Homepage: <a href="${languageData.homepage}" target="_blank">${languageData.homepage}</a></p>
+          <p>Download: <a href="${languageData.download}" target="_blank">${languageData.download}</a></p>
+          <p>Votes: ${languageData.votes}</p>
+          <button onclick="vote('${language}')">Vote for ${language} <i class="far fa-thumbs-up"></i></button>
+        `;
+
+        languagesDiv.appendChild(languageContainer);
+      }
+    }
+
+    // Function to handle voting
+    function vote(language) {
+      // Simulate a voting API call
+      // In a real application, you would send a request to the server to update the votes
+      // For simplicity, we're just incrementing the vote count locally
+
+      // Make a GET request to the backend API to record the vote
+      fetch(`http://api-cloudacademy.apps.cluster-x9mgm.sandbox69.opentlc.com//languages/${language.toLowerCase()}/vote`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log(data);
+        // After voting, fetch and display the updated data
+        fetchDataAndDisplay();
+      })
+      .catch(error => console.error('Error:', error));
+    }
+  </script>
+</body>
+</html>
+
